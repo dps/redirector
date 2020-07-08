@@ -10,6 +10,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var ctx = context.Background()
@@ -83,6 +84,7 @@ func main() {
 
 	redirectHandler := newRedirectHandler(client)
 
+	http.Handle("/__metrics", promhttp.Handler())
 	http.Handle("/", redirectHandler)
 	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 }
